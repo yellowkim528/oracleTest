@@ -19,6 +19,5 @@ public class MemberController {
     model.addAttribute("members",result.get());
     return "member.html";
 
-
   }
 }

@@ -19,7 +19,7 @@ public class Member {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long managementId; //MANAGEMENT_ID;                 //	NUMBER(10,0)
   String memberId;   // MEMBER_ID;                 //	VARCHAR2(12 BYTE)
-  String password;   //PW;                  //	VARCHAR2(20 BYTE)
+  String pw;   //PW;                  //	VARCHAR2(20 BYTE)
   String tel;                 //	VARCHAR2(11 BYTE)
   String nickname;                  //	VARCHAR2(36 BYTE)
   String gender;                  //	VARCHAR2(3 BYTE)
