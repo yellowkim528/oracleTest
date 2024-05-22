@@ -19,8 +19,8 @@ public class BbsSVCImpl implements BbsSVC {
   }
 
   @Override
-  public Long save(Bbs bbs) {
-    return bbsDAO.save(bbs);
+  public Long save(String codeId, Bbs bbs) {
+    return bbsDAO.save(codeId, bbs);
   }
 
   @Override
@@ -39,7 +39,12 @@ public class BbsSVCImpl implements BbsSVC {
   }
 
   @Override
-  public List<Bbs> findAll() {
-    return bbsDAO.findAll();
+  public List<Bbs> findFreeAll() {
+    return bbsDAO.findFreeAll();
+  }
+
+  @Override
+  public List<Bbs> findShareAll() {
+    return bbsDAO.findShareAll();
   }
 }

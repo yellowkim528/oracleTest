@@ -3,9 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Title</title>
+  <title>커뮤니티</title>
+  <link href="/css/reset.css" rel="stylesheet">
+  <link href="/css/header.css" rel="stylesheet">
+  <link href="/css/footer.css" rel="stylesheet">
+  <link href="/css/boardDetail.css" rel="stylesheet">
 </head>
+
 <body>
-  <h3>게시글 조회화면임</h3>
+  <div class="header">
+    <div class="header_wrapper">
+      <div class="header_start">
+        <a href="#"><img src="/img/logo.png" alt="로고"></a>
+      </div>
+      <div class="header_center">
+        <p class="title_name">Community</p>
+      </div>
+      <ul class="nav">
+        <a class="reco" href="#">여행지 검색</a>
+        <li class="dropdown">
+          <a class="mypage" href="#">마이페이지</a>
+          <ul class="dropdown_content">
+            <li><a class="myplan" href="#">나의 여행일정</a></li>
+            <li><a class="info_edit" href="#">나의 정보수정</a></li>
+          </ul>
+        </li>
+        <a class="login" href="#">로그인</a>
+        <a class="logout" href="#">로그아웃</a>
+      </ul>
+    </div>
+  </div>
+
+
+  <div class="tab_content">
+    <div class="wrapper">
+      <div class="conbox">
+        <div class="board_wrapper">
+          <form action="#" method="post">
+            <table class="table table-secondary">
+              <thead class="table-dark">
+              <tr>
+                <td>글제목</td>
+                <td th:text="${bbs.title}"></td>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td style="width:100px;">작성자</td>
+                <td th:text="${bbs.nickname}"></td>
+              </tr>
+              <tr>
+                <td>작성일</td>
+                <td th:text="${bbs.cdate}"></td>
+              </tr>
+              <tr>
+                <td>내용</td>
+                <td th:text="${bbs.bContent}"></td>
+              </tr>
+              </tbody>
+            </table>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 푸터 -->
+  <footer>
+    <div class="footer_main">
+      <p>트래블메이커</p>
+      <p>주소: 울산광역시 남구 삼산로35번길 19 (신정동) </p>
+      <p>Tel : 052-123-5678</p>
+    </div>
+    <!-- 푸터_카피라이트 -->
+    <div class="footer_copyright">
+      <p>Copyright © TravelMaker. All Rights Reserved.</p>
+    </div>
+  </footer>
 </body>
 </html>

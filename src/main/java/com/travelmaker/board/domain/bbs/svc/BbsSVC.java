@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface BbsSVC {
   // 작성
-  Long save(Bbs bbs);
+  Long save(String codeId, Bbs bbs);
 
   // 조회
   Optional<Bbs> findById(Long bbsId);
@@ -18,6 +18,9 @@ public interface BbsSVC {
   // 삭제
   int deleteById(Long bbsId);
 
-  // 목록
-  List<Bbs> findAll();
+  // 자유게시판 목록
+  List<Bbs> findFreeAll();
+
+  // 공유게시판 목록
+  List<Bbs> findShareAll();
 }

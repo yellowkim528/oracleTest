@@ -38,7 +38,7 @@ class BbsDAOImplTest {
 
   @Test
   void findAll() {
-    List<Bbs> bbsAll = bbsDAO.findAll();
+    List<Bbs> bbsAll = bbsDAO.findFreeAll();
     assertThat(bbsAll).isNotEmpty();
 
     bbsAll.forEach(System.out::println);
