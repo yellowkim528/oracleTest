@@ -8,16 +8,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 @Slf4j
-@RequiredArgsConstructor
+@Service
+
 public class RbbsSVCImpl implements RbbsSVC{
 
   private RbbsDAO rbbsDAO;
 
+  public RbbsSVCImpl(RbbsDAO rbbsDAO) {
+    this.rbbsDAO = rbbsDAO;
+  }
+
   @Override
-  public List<Rbbs> findAll(Long rbbsId) {
-    return rbbsDAO.findAll(rbbsId);
+  public List<Rbbs> findAll(Long bbsId) {
+    return rbbsDAO.findAll(bbsId);
   }
 
   @Override
