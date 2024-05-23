@@ -24,14 +24,17 @@ public class RbbsDAOImpl implements RbbsDAO{
 
   // 목록
   @Override
-  public List<Rbbs> finaAll(Long bbsId) {
+  public List<Rbbs> findAll(Long bbsId) {
     StringBuffer sql = new StringBuffer();
-    sql.append("    select *  ");
-    sql.append("      from rbbs ");
-    sql.append("     where bbs_id = :bbsId ");
+    sql.append("    select *      ");
+    sql.append("      from rbbs   ");
+    sql.append("     where bbs_id = :bbsId   ");
     sql.append("  order by rbbs_id  ");
 
-    List<Rbbs> list = template.query(sql.toString(), BeanPropertyRowMapper.newInstance(Rbbs.class));
+    SqlParameterSource param = new MapSqlParameterSource()
+        .addValue("bbsId", bbsId);
+
+    List<Rbbs> list = template.query(sql.toString(), param, BeanPropertyRowMapper.newInstance(Rbbs.class));
 
     return list;
   }
@@ -41,7 +44,7 @@ public class RbbsDAOImpl implements RbbsDAO{
   public Long addRbbs(Rbbs rbbs) {
     StringBuffer sql = new StringBuffer();
     sql.append(" insert into rbbs( rbbs_id, bbs_id, management_id, nickname, bcontent ) ");
-    sql.append(" values( rbbs_rbbs_id_seq, :bbsId, :managementId, :nickname, :bContent ) ");
+    sql.append(" values( rbbs_rbbs_id_seq.nextval, :bbsId, :managementId, :nickname, :bContent ) ");
 
     SqlParameterSource param = new MapSqlParameterSource()
         .addValue("managementId", rbbs.getManagementId())
@@ -52,7 +55,7 @@ public class RbbsDAOImpl implements RbbsDAO{
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
     template.update(sql.toString(), param, keyHolder, new String[]{"rbbs_id"});
-    Long rbbs_id = ((BigDecimal) keyHolder.getKeys().get("rbbs_id")).longValue();
+    Long rbbs_id = ((BigDecimal)keyHolder.getKeys().get("rbbs_id")).longValue();
 
     return rbbs_id;
   }

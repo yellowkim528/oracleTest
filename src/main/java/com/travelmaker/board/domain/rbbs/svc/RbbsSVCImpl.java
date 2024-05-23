@@ -16,8 +16,8 @@ public class RbbsSVCImpl implements RbbsSVC{
   private RbbsDAO rbbsDAO;
 
   @Override
-  public List<Rbbs> finaAll(Long rbbsId) {
-    return rbbsDAO.finaAll(rbbsId);
+  public List<Rbbs> findAll(Long rbbsId) {
+    return rbbsDAO.findAll(rbbsId);
   }
 
   @Override

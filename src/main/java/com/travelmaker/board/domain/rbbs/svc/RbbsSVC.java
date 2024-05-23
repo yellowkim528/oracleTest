@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface RbbsSVC {
   // 목록
-  List<Rbbs> finaAll(Long bbsId);
+  List<Rbbs> findAll(Long bbsId);
 
   // 추가
   Long addRbbs(Rbbs rbbs);

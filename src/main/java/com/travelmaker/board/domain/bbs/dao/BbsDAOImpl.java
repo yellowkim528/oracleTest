@@ -26,7 +26,7 @@ public class BbsDAOImpl implements BbsDAO{
   public Long save(String codeId, Bbs bbs) {
     StringBuffer sql = new StringBuffer();
     sql.append(" insert into bbs( bbs_id, management_id, title, code_id, nickname, bcontent, status, hit, good, bad, plan_id ) ");
-    sql.append("          values( bbs_bbs_id_seq ,:managementId, :title, :codeId, :nickname, :bContent, :status, :hit, :good, :bad, :planId ) ");
+    sql.append("          values( bbs_bbs_id_seq.nextval ,:managementId, :title, :codeId, :nickname, :bContent, :status, :hit, :good, :bad, :planId ) ");
 
     SqlParameterSource param = new MapSqlParameterSource()
         .addValue("managementId", bbs.getManagementId())

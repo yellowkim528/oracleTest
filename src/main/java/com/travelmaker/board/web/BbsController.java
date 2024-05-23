@@ -50,7 +50,7 @@ public class BbsController {
     bbs.setPlanId(addForm.getPlanId());
 
     Long bbsId = bbsSVC.save(addForm.getCodeId(), bbs);
-    log.info("상품번호={}", bbsId);
+
 
     redirectAttributes.addAttribute("bbsId", bbsId);
     return "redirect:/board/{bbsId}/detail";

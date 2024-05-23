@@ -8,6 +8,7 @@
   <link href="/css/header.css" rel="stylesheet">
   <link href="/css/footer.css" rel="stylesheet">
   <link href="/css/boardDetail.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -82,6 +83,7 @@
           <div class="attach-box">
             <button>등록</button>
           </div>
+          <div id="comments"></div>
         </div>
 
 
@@ -101,5 +103,31 @@
       <p>Copyright © TravelMaker. All Rights Reserved.</p>
     </div>
   </footer>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      var bbsId = '1'; // 예시 게시글 ID
+      fetch('/board/' + bbsId + '/comment') // REST API 엔드포인트
+          .then(function(response) {
+              if (!response.ok) {
+                  throw new Error('네트워크 응답이 올바르지 않습니다.');
+              }
+              return response.json(); // JSON 형식으로 변환
+          })
+          .then(function(data) {
+              var commentsHtml = '';
+              data.forEach(function(comment) {
+                  commentsHtml += '<p><strong>' + comment.nickname + '</strong>: ' + comment.bContent + '</p>';
+              });
+              document.getElementById('comments').innerHTML = commentsHtml;
+          })
+          .catch(function(error) {
+              console.error('댓글 목록을 가져오는 데 실패했습니다.', error);
+          });
+  });
+
+</script>
+
 </body>
 </html>
