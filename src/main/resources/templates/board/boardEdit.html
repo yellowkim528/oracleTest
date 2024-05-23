@@ -1,11 +1,97 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Title</title>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커뮤니티</title>
+    <link href="/css/reset.css" rel="stylesheet">
+    <link href="/css/header.css" rel="stylesheet">
+    <link href="/css/footer.css" rel="stylesheet">
+    <link href="/css/boardEdit.css" rel="stylesheet">
+  </head>
 </head>
+
 <body>
+<div class="header">
+  <div class="header_wrapper">
+    <div class="header_start">
+      <a href="#"><img src="/img/logo.png" alt="로고"></a>
+    </div>
+    <div class="header_center">
+      <p class="title_name">Community</p>
+    </div>
+    <ul class="nav">
+      <a class="reco" href="#">여행지 검색</a>
+      <li class="dropdown">
+        <a class="mypage" href="#">마이페이지</a>
+        <ul class="dropdown_content">
+          <li><a class="myplan" href="#">나의 여행일정</a></li>
+          <li><a class="info_edit" href="#">나의 정보수정</a></li>
+        </ul>
+      </li>
+      <a class="login" href="#">로그인</a>
+      <a class="logout" href="#">로그아웃</a>
+    </ul>
+  </div>
+</div>
+
+<div class="tab_content">
+  <div class="wrapper">
+    <div class="conbox">
+      <div class="board_wrapper">
+        <form id="frm" action="/board/1/edit" method="post">
+          <div>
+            <select id="boardSelect" class="form-select">
+              <option value="default">게시판선택</option>
+              <option value="F0101" th:selected="${bbs.codeId} == 'F0101'">자유게시판</option>
+              <option value="F0103" th:selected="${bbs.codeId} == 'F0103'">공유게시판</option>
+            </select>
+          </div>
+          <div class="table-wrapper">
+            <table class="table table-secondary">
+              <thead>
+                <tr>
+                  <td><input id="bbsTitle" name="bbsTitle" type="text" th:value="${bbs.title}"></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><button>일정가져오기</button></td>
+                </tr>
+                <tr>
+                  <td><textarea id="content" name="bbsContent" cols="30" rows="10" th:text="${bbs.bContent}"></textarea></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="btns">
+            <button class="btn btn-dark" type="reset" value="초기화">초기화</button>
+            <button class="btn btn-dark" type="button" value="목록" id="listBtn">목록</button>
+            <button class="btn btn-dark" type="submit" value="저장" id="saveBtn">저장</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 푸터 -->
+<footer>
+  <div class="footer_main">
+    <p>트래블메이커</p>
+    <p>주소: 울산광역시 남구 삼산로35번길 19 (신정동) </p>
+    <p>Tel : 052-123-5678</p>
+  </div>
+  <!-- 푸터_카피라이트 -->
+  <div class="footer_copyright">
+    <p>Copyright © TravelMaker. All Rights Reserved.</p>
+  </div>
+</footer>
+<script>
+
+</script>
+
 
 </body>
 </html>

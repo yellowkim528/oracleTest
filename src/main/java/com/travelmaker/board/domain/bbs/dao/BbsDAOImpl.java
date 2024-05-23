@@ -58,7 +58,7 @@ public class BbsDAOImpl implements BbsDAO{
   public Optional<Bbs> findById(Long bbsId) {
     // 쿼리문 작성
     StringBuffer sql = new StringBuffer();
-    sql.append("select bbs_id, management_id title, code_id, nickname, bcontent, status, hit, good, bad, plan_id, cdate, udate ");
+    sql.append("select bbs_id, management_id, title, code_id, nickname, bcontent, status, hit, good, bad, plan_id, cdate, udate ");
     sql.append("  from bbs ");
     sql.append(" where bbs_id = :bbsId ");
 

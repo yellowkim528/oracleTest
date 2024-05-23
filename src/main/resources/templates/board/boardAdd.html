@@ -8,9 +8,10 @@
     <link href="/css/reset.css" rel="stylesheet">
     <link href="/css/header.css" rel="stylesheet">
     <link href="/css/footer.css" rel="stylesheet">
-    <link href="/css/boardList.css" rel="stylesheet">
+    <link href="/css/boardAdd.css" rel="stylesheet">
   </head>
 </head>
+
 <body>
   <div class="header">
     <div class="header_wrapper">
@@ -35,6 +36,49 @@
     </div>
   </div>
 
+  <div class="tab_content">
+    <div class="wrapper">
+      <div class="conbox">
+        <div class="board_wrapper">
+          <form id="frm" action="/board/add" method="post">
+            <div>
+              <select class="form-select" aria-label="Default select example">
+                <option selected>게시판선택</option>
+                <option value="F0101">자유게시판</option>
+                <option value="F0103">공유게시판</option>
+              </select>
+            </div>
+            <div class="table-wrapper">
+              <table class="table table-secondary">
+                <thead>
+                  <tr>
+                    <td><input id="bbsTitle" name="bbsTitle" type="text" placeholder="제목을 입력해 주세요"></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="table-dark">작성자이름</td>
+                  </tr>
+                  <tr>
+                    <td><button>일정가져오기</button></td>
+                  </tr>
+                  <tr>
+                    <td><textarea id="postBody" name="postBody" cols="30" rows="10" placeholder="내용을 입력하세요"></textarea></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="btns">
+              <button class="btn btn-dark" type="reset" value="초기화">초기화</button>
+              <button class="btn btn-dark" type="button" value="목록" id="listBtn">목록</button>
+              <button class="btn btn-dark" type="submit" value="저장" id="saveBtn">저장</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 </body>

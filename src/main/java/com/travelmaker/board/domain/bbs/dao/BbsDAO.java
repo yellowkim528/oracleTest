@@ -13,7 +13,7 @@ public interface BbsDAO {
   Optional<Bbs> findById(Long bbsId);
 
   // 수정
-  int updateById(Long postId, Bbs bbs);
+  int updateById(Long bbsId, Bbs bbs);
 
   // 삭제
   int deleteById(Long bbsId);

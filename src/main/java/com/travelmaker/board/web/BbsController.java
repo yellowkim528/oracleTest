@@ -67,13 +67,7 @@ public class BbsController {
     model.addAttribute("shareList", shareList);
     return "board/boardList.html";
   }
-//  // 공유게시판 목록
-//  @GetMapping("")
-//  public String findShareAll(Model model) {
-//    List<Bbs> list = bbsSVC.findFreeAll();
-//    model.addAttribute("list", list);
-//    return "board/boardList.html";
-//  }
+
 
   // 조회
   @GetMapping("/{bbsId}/detail")
