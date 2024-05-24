@@ -12,11 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
-//@Controller
 @RequestMapping("/board/{bbsId}/comment")
 @RequiredArgsConstructor
 public class RbbsController {
@@ -25,7 +26,7 @@ public class RbbsController {
 
   // 댓글 등록
   @PostMapping
-  public ResponseEntity<String> addComment(
+  public ResponseEntity<Map<String, Object>> addComment(
       @PathVariable("bbsId") Long bbsId,
       @RequestBody AddCommentForm addCommentForm) {
     Rbbs rbbs = new Rbbs();
@@ -36,7 +37,14 @@ public class RbbsController {
 
     Long rbbsId = rbbsSVC.addRbbs(rbbs);
 
-    return ResponseEntity.ok("등록완료");
+    Map<String, Object> response = new HashMap<>();
+    Map<String, String> header = new HashMap<>();
+    header.put("rtcd", "00");
+    header.put("errMsg", null);
+    response.put("header", header);
+    response.put("body", Map.of("message", "등록완료"));
+
+    return ResponseEntity.ok(response);
   }
 
   // 댓글 목록
@@ -56,7 +64,7 @@ public class RbbsController {
 
   // 댓글 수정
   @PatchMapping("/{rbbsId}")
-  public ResponseEntity<String> editComment(
+  public ResponseEntity<Map<String, Object>> editComment(
       @PathVariable("rbbsId") Long rbbsId,
       @RequestBody EditCommentForm editCommentForm
       ){
@@ -64,14 +72,27 @@ public class RbbsController {
     rbbs.setBContent(editCommentForm.getBContent());
 
     int isUpdated = rbbsSVC.updateById(rbbsId, rbbs);
-    if (isUpdated==1) {
-      return ResponseEntity.status(HttpStatus.OK).body("댓글 수정 완료");
-    } else {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 수정 실패");
-    }
+    
+    Map<String, Object> response = new HashMap<>();
+    Map<String, String> header = new HashMap<>();
+    header.put("rtcd", "00");
+    header.put("errMsg", null);
+    response.put("header", header);
+    response.put("body", Map.of("message", "수정완료"));
+
+    return ResponseEntity.ok(response);
   }
 
   // 댓글 삭제
+  @DeleteMapping("/{rbbsId}")
+  public ResponseEntity<String> deleteComment(
+      @PathVariable("rbbsId") Long rbbsId) {
 
-
+    int delCnt = rbbsSVC.deleteById(rbbsId);
+    if (delCnt==1) {
+      return ResponseEntity.status(HttpStatus.OK).body("댓글 삭제 완료");
+    } else {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 삭제 실패");
+    }
+  }
 }

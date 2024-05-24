@@ -1,5 +1,6 @@
 package com.travelmaker.board.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ public class Bbs {
   private String title;          // TITLE	VARCHAR2(150 BYTE)
   private String codeId;         // CODE_ID	VARCHAR2(6 BYTE)
   private String nickname;       // NICKNAME	VARCHAR2(36 BYTE)
+  @JsonProperty("bContent")
   private String bContent;       // BCONTENT	CLOB
   private String status;         // STATUS	CHAR(1 BYTE)
   private Integer hit;           // HIT	NUMBER(10,0)

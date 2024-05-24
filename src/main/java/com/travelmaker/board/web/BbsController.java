@@ -80,7 +80,7 @@ public class BbsController {
     Bbs bbs = foundBbs.orElseThrow();
     model.addAttribute("bbs", bbs);
 
-    return "board/boardDetail";
+    return "board/boardDetail.html";
   }
 
   // 삭제
@@ -101,7 +101,7 @@ public class BbsController {
     Bbs foundBbs = bbs.orElseThrow();
 
     model.addAttribute("bbs", foundBbs);
-    return "board/boardEdit";
+    return "board/boardEdit.html";
   }
 
   // 수정 처리

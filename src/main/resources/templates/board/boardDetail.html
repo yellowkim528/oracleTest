@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,24 +44,24 @@
           <form action="#" method="post">
             <table class="table table-secondary">
               <thead class="table-dark">
-              <tr>
-                <td>글제목</td>
-                <td th:text="${bbs.title}"></td>
-              </tr>
+                <tr>
+                  <td>글제목</td>
+                  <td th:text="${bbs.title}"></td>
+                </tr>
               </thead>
               <tbody>
-              <tr>
-                <td style="width:100px;">작성자</td>
-                <td th:text="${bbs.nickname}"></td>
-              </tr>
-              <tr>
-                <td>작성일</td>
-                <td th:text="${bbs.cdate}"></td>
-              </tr>
-              <tr>
-                <td>내용</td>
-                <td th:text="${bbs.bContent}"></td>
-              </tr>
+                <tr>
+                  <td style="width:100px;">작성자</td>
+                  <td th:text="${bbs.nickname}"></td>
+                </tr>
+                <tr>
+                  <td>작성일</td>
+                  <td th:text="${#temporals.format(bbs.cdate,'yyyy-MM-dd HH:mm')}"></td>
+                </tr>
+                <tr>
+                  <td>내용</td>
+                  <td th:text="${bbs.bContent}"></td>
+                </tr>
               </tbody>
             </table>
           </form>
@@ -68,28 +69,26 @@
         </div>
         <!-- 좋아요 댓글수  표시부분      -->
         <div class="board_wrapper">
-          <h3>좋아요 : 0 , 댓글 : 00 </h3>
+          <h3 id="stats">조회 : 0 좋아요 : 0 댓글 : 0 </h3>
+          <button id="goodBtn">좋아요</button>
+        </div>
+        
+      
+        <!-- 댓글 입력 부분 -->
+        <div class="board_wrapper">
+          <form id="addForm">
+            <textarea id="textarea" rows="1" placeholder="댓글을 입력하세요"></textarea>
+            <div class="attach-box">
+              <button id="addBtn">등록</button>
+            </div>
+          </form>
         </div>
         <!-- 댓글 표시 부분-->
         <div class="board_wrapper">
-          <h2>댓글</h2>
-        </div>
-
-
-        <!-- 댓글 입력 부분 -->
-        <div class="board_wrapper">
-          <h2></h2>
-          <textarea rows="1" placeholder="댓글을 입력하세요"></textarea>
-          <div class="attach-box">
-            <button>등록</button>
-          </div>
-          <h1>Comments</h1>
           <div id="comments">
             <!-- 댓글 목록이 여기에 표시됩니다 -->
           </div>
         </div>
-
-
       </div>
     </div>
   </div>
@@ -107,33 +106,187 @@
     </div>
   </footer>
 
-<!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
-<script>
-  // 댓글 목록
-  document.addEventListener('DOMContentLoaded', function() {
-    var bbsId = '1'; // 예시 게시글 ID
-    fetch('/board/' + bbsId + '/comment') // REST API 엔드포인트
-      .then(function(response) {
+  <script th:inline="javascript">
+
+    // 조회수, 좋아요
+    let hit = [[${hit}]];
+    let good = [[${good}]];
+
+    // 글 번호
+    let bbsId = [[${bbsId}]];
+
+    // 댓글 개수
+    const commentCount = document.querySelectorAll('.commentItem').length;
+
+    // 통계 정보 업데이트
+    const statsElement = document.getElementById('stats');
+    statsElement.innerHTML = `조회 ${hit} 좋아요 ${good} 댓글 ${commentCount}`
+
+
+    // 날짜 포맷팅 함수 정의
+    function formatCommentDate(cdate) {
+      return new Date(cdate).toLocaleString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+    }
+ 
+
+    // 등록 
+    document.getElementById('addForm').addEventListener('submit', async function (evt) {
+      
+      evt.preventDefault();
+      // 댓글 입력 폼
+      let rbbsText = document.getElementById('textarea').value;
+      console.log(rbbsText);
+      const url = `http://localhost:8080/board/${bbsId}/comment`;
+      const payload = {
+        bbsId: bbsId,
+        managementId: 43,     // 로그인 세션 managementId
+        nickname: "sora",     // 로그인 세션 nickname
+        bContent: rbbsText
+      };
+      const option = {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      };
+      try {
+        const res = await fetch(url, option);
+        if (!res.ok) throw new Error('서버 오류 발생');
+        const result = await res.json();
+        // 성공
+        if (result.header && result.header.rtcd == '00') {
+          document.getElementById('textarea').value = '';
+          await loadComments(bbsId);
+        } else {
+          throw new Error(result.header.errMsg || '댓글 등록 실패!');
+        }
+      } catch (err) {
+        console.error(err.message);
+        alert(err.message);
+      }
+    });
+    
+    // 페이지 로드 시 댓글 리스트를 불러옴
+    document.addEventListener('DOMContentLoaded', function () {
+      loadComments(bbsId);
+    });
+
+    async function loadComments(bbsId) {
+      try {
+        const response = await fetch('/board/' + bbsId + '/comment');
         if (!response.ok) {
           throw new Error('네트워크 응답이 올바르지 않습니다.');
         }
-        return response.json(); // JSON 형식으로 변환
-      })
-      .then(function(data) {
+        const data = await response.json();
         console.log(data);
-        var commentsHtml = '';
-        data.forEach(function(comment) {
-          commentsHtml += '<p><strong>' + comment.nickname + '</strong></p>';
-          commentsHtml += '<p>' + comment.bContent + '</p>';
+        let commentsHtml = '';
+        data.forEach(function (comment) {
+          const formattedDate = formatCommentDate(comment.cdate);
+          commentsHtml += `
+                <div class="comment_option">
+                  <ul class="comment_list">
+                    <li type="hidden" id="${comment.rbbsId}" class="commentItem">
+                      <div class="comment_box">
+                        <div class="nick_box">
+                          <a class="nick_info">
+                            ${comment.nickname}
+                          </a>
+                        </div>
+                        <div class="text_box">
+                          <div class="comment_date">
+                            ${formattedDate}
+                          </div>
+                          <div class="text_comment">
+                            ${comment.bContent}
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="Btns" data-id="${comment.rbbsId}">
+                  <button class="editBtn">수정</button>
+                  <button class="deleteBtn">삭제</button>
+                </div>
+              `;
         });
         document.getElementById('comments').innerHTML = commentsHtml;
-      })
-      .catch(function(error) {
-        console.error('댓글 목록을 가져오는 데 실패했습니다.', error);
-      });
-  });
 
-</script>
+        // 수정 버튼 클릭 이벤트 리스너 추가
+        document.querySelectorAll('.editBtn').forEach(function (button) {
+          button.addEventListener('click', function () {
+            let commentId = this.parentElement.getAttribute('data-id');
+            editComment(commentId);
+          });
+        });
+
+        // 삭제 버튼 클릭 이벤트 리스너 추가
+        document.querySelectorAll('.deleteBtn').forEach(function (button) {
+          button.addEventListener('click', function () {
+            let commentId = this.parentElement.getAttribute('data-id');
+            deleteComment(commentId);
+          });
+        });
+      } catch (error) {
+        console.error('댓글 목록을 가져오는 데 실패했습니다.', error);
+      }
+    }
+
+    function editComment(commentId) {
+      let newContent = prompt('새로운 댓글 내용을 입력하세요:');
+      if (newContent) {
+        fetch('/board/' + bbsId + '/comment/' + commentId, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ bContent: newContent })
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('댓글 수정에 실패했습니다.');
+            }
+            return response.json();
+          })
+          .then(data => {
+            alert('댓글이 성공적으로 수정되었습니다.');
+            loadComments(bbsId); // 페이지를 새로고침하여 변경된 내용을 반영
+          })
+          .catch(error => {
+            console.error('댓글 수정 중 오류가 발생했습니다.', error);
+          });
+      }
+    }
+
+    function deleteComment(commentId) {
+      console.log(commentId);
+      if (confirm('정말 이 댓글을 삭제하시겠습니까?')) {
+        fetch('/board/' + bbsId + '/comment/' + commentId, {
+          method: 'DELETE'
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('댓글 삭제에 실패했습니다.');
+            }
+            alert('댓글이 성공적으로 삭제되었습니다.');
+            loadComments(bbsId); // 페이지를 새로고침하여 변경된 내용을 반영
+          })
+          .catch(error => {
+            console.error('댓글 삭제 중 오류가 발생했습니다.', error);
+          });
+      }
+    }
+  </script>
 
 </body>
+
 </html>

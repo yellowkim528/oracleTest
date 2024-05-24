@@ -29,7 +29,7 @@ public class RbbsDAOImpl implements RbbsDAO{
     sql.append("    select *      ");
     sql.append("      from rbbs   ");
     sql.append("     where bbs_id = :bbsId   ");
-    sql.append("  order by rbbs_id  ");
+    sql.append("  order by cdate  ");
 
     SqlParameterSource param = new MapSqlParameterSource()
         .addValue("bbsId", bbsId);

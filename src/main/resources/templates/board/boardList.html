@@ -71,11 +71,11 @@
               </thead>
               <tbody>
                 <!-- 테이블행 반복 -->
-                <tr class="free_board" th:each="i : ${freeList}">
+                <tr class="free_board" th:each="i : ${freeList}" th:data-bbs-id="${i.bbsId}">
                   <td class="ck"><input type="checkbox" name=""></td>
                   <td class="tn">123</td>
-                  <td class="tt" th:text="${i.title}">동해물과 백 두산이</td>
-                  <td class="tw" th:text="${i.nickname}">애국자</td>
+                  <td class="tt clickable-title" th:text="${i.title}">제목임</td>
+                  <td class="tw" th:text="${i.nickname}">닉네임임</td>
                   <td class="td" th:text="${#temporals.format(i.cdate,'yyyy-MM-dd')}">작성일자임</td>
                   <td class="tr" th:text="${i.hit}">486</td>
                   <td class="tl" th:text="${i.good}">777</td>
@@ -99,8 +99,8 @@
               <div>&gt;&gt;</div>
             </div>
             <div class="btn_wrap">
-              <button class="board_del">삭제</button>
-              <button class="board_add">등록</button>
+              <button class="board_add">글쓰기</button>
+              <button class="board_del" style="display:none">삭제</button>
             </div>
           </div>
         </div>
@@ -133,11 +133,11 @@
                 </thead>
                 <tbody>
                 <!-- 테이블행 반복 -->
-                <tr class="free_board" th:each="i : ${shareList}">
+                <tr class="free_board" th:each="i : ${shareList}" th:data-bbs-id="${i.bbsId}">
                   <td class="ck"><input type="checkbox" name=""></td>
                   <td class="tn">123</td>
-                  <td class="tt" th:text="${i.title}">동해물과 백 두산이</td>
-                  <td class="tw" th:text="${i.nickname}">애국자</td>
+                  <td class="tt clickable-title" th:text="${i.title}">공유게시글제목</td>
+                  <td class="tw" th:text="${i.nickname}">작성한놈</td>
                   <td class="td" th:text="${#temporals.format(i.cdate,'yyyy-MM-dd')}">작성일자임</td>
                   <td class="tr" th:text="${i.hit}">486</td>
                   <td class="tl" th:text="${i.good}">777</td>
@@ -161,8 +161,8 @@
                 <div>&gt;&gt;</div>
               </div>
               <div class="btn_wrap">
-                <button class="board_del">삭제</button>
-                <button class="board_add">등록</button>
+                <button class="board_add">글쓰기</button>
+                <button class="board_del" style="display:none">삭제</button>
               </div>
             </div>
           </div>
@@ -188,6 +188,31 @@
     </div>
   </footer>
 
+  <script>
+    // 게시글 조회
+    document.addEventListener('DOMContentLoaded', function () {
+    // "clickable-title" 클래스를 가진 모든 요소에 대해 함수를 실행합니다.
+      document.querySelectorAll('.clickable-title').forEach(function (evt) {
+        evt.addEventListener('click', function () {
+          // 클릭된 요소의 부모인 tr에서 data-bbs-id 속성값을 읽습니다.
+          const bbsId = this.closest('tr').getAttribute('data-bbs-id');
+          // 해당 게시글의 상세 페이지로 이동합니다.
+          location.href = `/board/${bbsId}/detail`;
+        });
+      });
+    });
+
+    // 게시글 작성 (글쓰기)
+    document.addEventListener('DOMContentLoaded', function() {
+      const addButton = document.querySelector('.board_add');
+      addButton.addEventListener('click', function() {
+        location.href = '/board/add';
+      });
+    });
+
+    // (관리자) 게시글 체크 및 삭제버튼 활성화
+
+  </script>
 
 </body>
 
