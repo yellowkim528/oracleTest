@@ -9,12 +9,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
 @RestController
+//@Controller
 @RequestMapping("/board/{bbsId}/comment")
 @RequiredArgsConstructor
 public class RbbsController {
@@ -42,6 +44,7 @@ public class RbbsController {
   public ResponseEntity<List<Rbbs>> listComment(
       @PathVariable("bbsId") Long bbsId) {
     log.info("bbsId={}",bbsId);
+    System.out.println(bbsId);
 
     List<Rbbs> list = rbbsSVC.findAll(bbsId);
 
