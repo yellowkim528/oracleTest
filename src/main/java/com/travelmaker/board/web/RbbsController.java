@@ -47,8 +47,11 @@ public class RbbsController {
     System.out.println(bbsId);
 
     List<Rbbs> list = rbbsSVC.findAll(bbsId);
+    ResponseEntity<List<Rbbs>> result = ResponseEntity.ok(list);
+    System.out.println(result);
+    log.info("result={}",result);
 
-    return ResponseEntity.ok(list);
+    return result;
   }
 
   // 댓글 수정

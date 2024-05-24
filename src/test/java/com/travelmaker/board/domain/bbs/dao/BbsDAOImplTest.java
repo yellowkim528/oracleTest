@@ -22,12 +22,12 @@ class BbsDAOImplTest {
   @Autowired
   private BbsDAO bbsDAO;
 
-  @Test
-  void findById() {
-    Long testBbsId = 1L;
+    @Test
+    void findById() {
+      Long testBbsId = 1L;
 
-    // BbsId =1 인 데이터 조회
-    Optional<Bbs> bbsOptional = bbsDAO.findById(testBbsId);
+      // BbsId =1 인 데이터 조회
+      Optional<Bbs> bbsOptional = bbsDAO.findById(testBbsId);
     
     // 그 행이 존재하는지 확인
     assertThat(bbsOptional).isPresent();
