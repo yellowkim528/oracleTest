@@ -62,9 +62,17 @@
                   <td>내용</td>
                   <td th:text="${bbs.bContent}"></td>
                 </tr>
+
               </tbody>
+
             </table>
           </form>
+          <!-- 글 목록, 수정, 삭제 버튼 -->
+          <div id="btns">
+            <button class="btn" type="button" value="목록" id="listBtn">목록</button>
+            <button class="btn" type="button" value="수정" id="editBtn">수정</button>
+            <button class="btn" type="button" value="삭제" id="delBtn">삭제</button>
+          </div>
 
         </div>
         <!-- 좋아요 댓글수  표시부분      -->
@@ -109,11 +117,49 @@
   <script th:inline="javascript">
 
     // 조회수, 좋아요
-    let hit = [[${hit}]];
-    let good = [[${good}]];
-
+    let hit = [[${bbs.hit}]];
+    let good = [[${bbs.good}]];
+    console.log(hit);
+    console.log(good);
+  
     // 글 번호
     let bbsId = [[${bbsId}]];
+    console.log(bbsId);
+    
+    // 게시판 목록 버튼
+    document.addEventListener('DOMContentLoaded', function () {
+    // "clickable-title" 클래스를 가진 모든 요소에 대해 함수를 실행합니다.
+      document.getElementById('listBtn').addEventListener('click', function () {
+        location.href = `/board`;
+      });
+    });
+   
+    // 게시판 수정 버튼
+    document.addEventListener('DOMContentLoaded', function () {
+    // "clickable-title" 클래스를 가진 모든 요소에 대해 함수를 실행합니다.
+      document.getElementById('editBtn').addEventListener('click', function () {
+        location.href = `/board/${bbsId}/edit`;
+      });
+    });
+
+     // 게시판 삭제 버튼
+     document.addEventListener('DOMContentLoaded', function () {
+    // "clickable-title" 클래스를 가진 모든 요소에 대해 함수를 실행합니다.
+      document.getElementById('delBtn').addEventListener('click', function () {
+        fetch(`/board/${bbsId}/del`, {
+          method: 'DELETE', // DELETE 요청을 명시
+        }).then(response => {
+          // 요청이 성공적으로 처리되면 게시판 목록 페이지로 리다이렉트
+          if (response.ok) {
+            console.log('굳')
+            // window.location.href = '/board';
+          }
+        }).catch(error => {
+          // 에러 처리
+          console.error('Error:', error);
+        });
+      });
+    });
 
     // 댓글 개수
     const commentCount = document.querySelectorAll('.commentItem').length;
@@ -285,6 +331,7 @@
           });
       }
     }
+
   </script>
 
 </body>

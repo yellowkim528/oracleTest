@@ -41,8 +41,9 @@
       <div class="conbox">
         <div class="board_wrapper">
           <form id="frm" action="/board/add" method="post">
+
             <div>
-              <select class="form-select" aria-label="Default select example">
+              <select class="form-select" aria-label="Default select example" name="codeId">
                 <option selected>게시판선택</option>
                 <option value="F0101">자유게시판</option>
                 <option value="F0103">공유게시판</option>
@@ -52,26 +53,27 @@
               <table class="table table-secondary">
                 <thead>
                   <tr>
-                    <td><input id="bbsTitle" name="bbsTitle" type="text" placeholder="제목을 입력해 주세요"></td>
+                    <td><input id="title" name="title" type="text" placeholder="제목을 입력해 주세요" required></td>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="table-dark">작성자이름</td>
+                    <td><input id="managementId" name="managementId" type="text" th:text="43"></td>
+                    <td><input id="nickname" name="nickname" type="text" placeholder="닉네임을 입력해 주세요"></td>
                   </tr>
                   <tr>
-                    <td><button>일정가져오기</button></td>
+                    <td><button class="btn">일정가져오기</button></td>
                   </tr>
                   <tr>
-                    <td><textarea id="postBody" name="postBody" cols="30" rows="10" placeholder="내용을 입력하세요"></textarea></td>
+                    <td><textarea id="bContent" name="bContent" cols="60" rows="20" placeholder="내용을 입력하세요"></textarea></td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <div id="btns">
-              <button class="btn btn-dark" type="reset" value="초기화">초기화</button>
-              <button class="btn btn-dark" type="button" value="목록" id="listBtn">목록</button>
-              <button class="btn btn-dark" type="submit" value="저장" id="saveBtn">저장</button>
+              <button class="btn" type="reset" value="초기화">초기화</button>
+              <button class="btn" type="button" value="목록" id="listBtn">목록</button>
+              <button class="btn" type="submit" value="저장" id="saveBtn">저장</button>
             </div>
           </form>
 
@@ -79,7 +81,35 @@
       </div>
     </div>
   </div>
+  <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+      const listButton = document.querySelectorAll('.btn')[2];
+      listButton.addEventListener('click', function() {
+        location.href = '/board';
+      });
+    });
 
+    document.getElementById('frm').onsubmit = async (e) => {
+      e.preventDefault(); // 폼 기본 제출 막기
+      const formData = new FormData(e.target); // 폼 데이터 수집
+      try {
+        const response = await fetch('/board/add', {
+          method: 'POST',
+          body: formData, // 폼 데이터 전송
+          
+        });
+
+        if (response.ok) {
+          console.log('성공적으로 저장되었습니다.');
+          location.href = '/board/'+${bbs.bbsId}+'/detail'; // 성공 시 페이지 이동
+        } else {
+          console.error('서버 오류');
+        }
+      } catch (error) {
+        console.error('전송 중 에러 발생:', error);
+      }
+    };
+  </script>
 
 </body>
 </html>

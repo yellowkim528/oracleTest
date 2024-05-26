@@ -72,7 +72,8 @@ public class RbbsController {
     rbbs.setBContent(editCommentForm.getBContent());
 
     int isUpdated = rbbsSVC.updateById(rbbsId, rbbs);
-    
+    log.info(String.valueOf(isUpdated));
+
     Map<String, Object> response = new HashMap<>();
     Map<String, String> header = new HashMap<>();
     header.put("rtcd", "00");

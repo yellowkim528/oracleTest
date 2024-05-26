@@ -110,7 +110,7 @@ public class BbsDAOImpl implements BbsDAO{
     sql.append("  where bbs_id = :bbsId ");
 
     SqlParameterSource param = new MapSqlParameterSource()
-        .addValue("bbs_id", bbsId);
+        .addValue("bbsId", bbsId);
 
     int deleteRowCnt = template.update(sql.toString(), param);
 
