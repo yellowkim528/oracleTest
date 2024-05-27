@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>여행플래너 관리</title>
+  <link href="css/reset.css" rel="stylesheet">
+  <link href="css/header.css" rel="stylesheet">
+  <link href="css/myplan.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="header">
+  <div class="header_wrapper">
+    <div class="header_start">
+      <a href="Main링크"><img src="img/logo.png" alt="로고"></a>
+    </div>
+    <div class="header_center">
+      <p class="title_name">여행 플래너 관리</p>
+    </div>
+    <div class="nav">
+      <button class="reco">여행지 추천</button>
+      <button class="mypage">마이페이지</button>
+      <button class="login">로그인</button>
+      <button class="logout">로그아웃</button>
+    </div>
+  </div>
+</div>
+
+<div class="tab_content">
+  <div class="wrapper">
+    <input type="radio" name="tabmenu" id="tab01" checked>
+    <label for="tab01">나의 일정</label>
+    <input type="radio" name="tabmenu" id="tab02">
+    <label for="tab02">나의 여행기록</label>
+
+    <!-- 나의 일정 -->
+    <div class="conbox con1">
+      <div class="plan_wrapper">
+
+        <!-- 반복시작 -->
+        <div class="plan_item">
+          <div class="plan_img">
+            <img class="thumbs_img" src="img/myplan_sample.jpg">
+          </div>
+          <div class="plan_detail">
+            <div class="detail_top">
+              <div class="dday">D-10</div>
+              <div class="area">지역명</div>
+              <div class="btn_wrap">
+                <button class="editBtn">수정</button>
+                <button class="delBtn">삭제</button>
+              </div>
+            </div>
+            <div class="detail_center">
+              <div class="travel_name">여행이름 (한줄 여행기록)</div>
+            </div>
+            <div class="detail_bottom">
+              <div class="travel_date">2024-05-22 ~ 2024-05-24</div>
+              <div class="travel_period">(3일간)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- plan_item으로 반복 -->
+        <div class="plan_item">
+          <div class="plan_img">
+            <img class="thumbs_img" src="img/myplan_sample.jpg">
+          </div>
+          <div class="plan_detail">
+            <div class="detail_top">
+              <div class="dday">D-10</div>
+              <div class="area">지역명</div>
+              <div class="btn_wrap">
+                <button class="editBtn">수정</button>
+                <button class="delBtn">삭제</button>
+              </div>
+            </div>
+            <div class="detail_center">
+              <div class="travel_name">여행이름 (한줄 여행기록)</div>
+            </div>
+            <div class="detail_bottom">
+              <div class="travel_date">2024-05-22 ~ 2024-05-24</div>
+              <div class="travel_period">(3일간)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan_item">
+          <div class="plan_img">
+            <img class="thumbs_img" src="img/myplan_sample.jpg">
+          </div>
+          <div class="plan_detail">
+            <div class="detail_top">
+              <div class="dday">D-10</div>
+              <div class="area">지역명</div>
+              <div class="btn_wrap">
+                <button class="editBtn">수정</button>
+                <button class="delBtn">삭제</button>
+              </div>
+            </div>
+            <div class="detail_center">
+              <div class="travel_name">여행이름 (사용자가 편집)</div>
+            </div>
+            <div class="detail_bottom">
+              <div class="travel_date">2024-05-22 ~ 2024-05-24</div>
+              <div class="travel_period">(3일간)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan_item">
+          <div class="plan_img">
+            <img class="thumbs_img" src="img/myplan_sample.jpg">
+          </div>
+          <div class="plan_detail">
+            <div class="detail_top">
+              <div class="dday">D-10</div>
+              <div class="area">지역명</div>
+              <div class="btn_wrap">
+                <button class="editBtn">수정</button>
+                <button class="delBtn">삭제</button>
+              </div>
+            </div>
+            <div class="detail_center">
+              <div class="travel_name">여행이름 (사용자가 편집)</div>
+            </div>
+            <div class="detail_bottom">
+              <div class="travel_date">2024-05-22 ~ 2024-05-24</div>
+              <div class="travel_period">(3일간)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan_item">
+          <div class="plan_img">
+            <img class="thumbs_img" src="img/myplan_sample.jpg">
+          </div>
+          <div class="plan_detail">
+            <div class="detail_top">
+              <div class="dday">D-10</div>
+              <div class="area">지역명</div>
+              <div class="btn_wrap">
+                <button class="editBtn">수정</button>
+                <button class="delBtn">삭제</button>
+              </div>
+            </div>
+            <div class="detail_center">
+              <div class="travel_name">여행이름 (사용자가 편집)</div>
+            </div>
+            <div class="detail_bottom">
+              <div class="travel_date">2024-05-22 ~ 2024-05-24</div>
+              <div class="travel_period">(3일간)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan_item">
+          <div class="plan_img">
+            <img class="thumbs_img" src="img/myplan_sample.jpg">
+          </div>
+          <div class="plan_detail">
+            <div class="detail_top">
+              <div class="dday">D-10</div>
+              <div class="area">지역명</div>
+              <div class="btn_wrap">
+                <button class="editBtn">수정</button>
+                <button class="delBtn">삭제</button>
+              </div>
+            </div>
+            <div class="detail_center">
+              <div class="travel_name">여행이름 (사용자가 편집)</div>
+            </div>
+            <div class="detail_bottom">
+              <div class="travel_date">2024-05-22 ~ 2024-05-24</div>
+              <div class="travel_period">(3일간)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan_item">
+          <div class="plan_img">
+            <img class="thumbs_img" src="img/myplan_sample.jpg">
+          </div>
+          <div class="plan_detail">
+            <div class="detail_top">
+              <div class="dday">D-10</div>
+              <div class="area">지역명</div>
+              <div class="btn_wrap">
+                <button class="editBtn">수정</button>
+                <button class="delBtn">삭제</button>
+              </div>
+            </div>
+            <div class="detail_center">
+              <div class="travel_name">여행이름 (사용자가 편집)</div>
+            </div>
+            <div class="detail_bottom">
+              <div class="travel_date">2024-05-22 ~ 2024-05-24</div>
+              <div class="travel_period">(3일간)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan_item">
+          <div class="plan_img">
+            <img class="thumbs_img" src="img/myplan_sample.jpg">
+          </div>
+          <div class="plan_detail">
+            <div class="detail_top">
+              <div class="dday">D-10</div>
+              <div class="area">지역명</div>
+              <div class="btn_wrap">
+                <button class="editBtn">수정</button>
+                <button class="delBtn">삭제</button>
+              </div>
+            </div>
+            <div class="detail_center">
+              <div class="travel_name">여행이름 (사용자가 편집)</div>
+            </div>
+            <div class="detail_bottom">
+              <div class="travel_date">2024-05-22 ~ 2024-05-24</div>
+              <div class="travel_period">(3일간)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan_item">
+          <div class="plan_img">
+            <img class="thumbs_img" src="img/myplan_sample.jpg">
+          </div>
+          <div class="plan_detail">
+            <div class="detail_top">
+              <div class="dday">D-10</div>
+              <div class="area">지역명</div>
+              <div class="btn_wrap">
+                <button class="editBtn">수정</button>
+                <button class="delBtn">삭제</button>
+              </div>
+            </div>
+            <div class="detail_center">
+              <div class="travel_name">여행이름 (사용자가 편집)</div>
+            </div>
+            <div class="detail_bottom">
+              <div class="travel_date">2024-05-22 ~ 2024-05-24</div>
+              <div class="travel_period">(3일간)</div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+
+    </div> <!-- 나의 일정 태그 끝 -->
+
+    <!-- 나의 여행기록 -->
+    <div class="conbox con2">
+      이건머지 왜 안나옴?
+    </div> <!-- 나의 여행기록 태그 끝 -->
+  </div>
+
+</div>
+
+
+</body>
+
+</html>

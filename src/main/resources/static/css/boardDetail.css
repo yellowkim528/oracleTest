@@ -55,3 +55,10 @@
 
 /* --- 테이블 종료 --- */
 
+/* 댓글 */
+.text_comment {
+  white-space: pre-wrap;
+}
+.textbox {
+  white-space: pre-wrap;
+}

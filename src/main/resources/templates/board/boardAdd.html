@@ -30,7 +30,6 @@
             <li><a class="info_edit" href="#">나의 정보수정</a></li>
           </ul>
         </li>
-        <a class="login" href="#">로그인</a>
         <a class="logout" href="#">로그아웃</a>
       </ul>
     </div>
@@ -58,8 +57,11 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td><input id="managementId" name="managementId" type="text" th:text="43"></td>
-                    <td><input id="nickname" name="nickname" type="text" placeholder="닉네임을 입력해 주세요"></td>
+                    <td><input id="managementId" name="managementId" type="text"  th:value="${session.loginMember.managementId}" style="display:none"></td>
+                    <input type="hidden" name="nickname" th:value="${session.loginMember.nickname}">
+                  </tr>
+                  <tr>
+                    <td id="nickname" type="text" th:text="${session.loginMember.nickname}"></td>
                   </tr>
                   <tr>
                     <td><button class="btn">일정가져오기</button></td>
@@ -101,7 +103,8 @@
 
         if (response.ok) {
           console.log('성공적으로 저장되었습니다.');
-          location.href = '/board/'+${bbs.bbsId}+'/detail'; // 성공 시 페이지 이동
+          const redirectUrl = await response.text();
+          window.location.href = redirectUrl; // 응답받은 URL로 리디렉션
         } else {
           console.error('서버 오류');
         }

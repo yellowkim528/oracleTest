@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>메뉴 선택</title>
+  <link href="/css/reset.css" rel="stylesheet">
+  <link href="/css/header.css" rel="stylesheet">
+  <link href="/css/footer.css" rel="stylesheet">
+  <link href="/css/selectMenu.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="header">
+  <div class="header_wrapper">
+    <div class="header_start">
+      <a href="/selectMenu.html"><img src="/img/logo.png" alt="로고"></a>
+    </div>
+    <div class="header_center">
+      <p class="title_name">메뉴</p>
+    </div>
+    <ul class="nav">
+      <a class="reco" href="#">여행지 검색</a>
+      <li class="dropdown">
+        <a class="mypage" href="#">마이페이지</a>
+        <ul class="dropdown_content">
+          <li><a class="myplan" href="mypage/myplan.html">나의 여행일정</a></li>
+          <li><a class="info_edit" href="#">나의 정보수정</a></li>
+        </ul>
+      </li>
+      <a class="login" href="/login">로그인</a>
+      <a class="logout" href="#" onclick="logout()">로그아웃</a>
+    </ul>
+  </div>
+</div>
+
+<section>
+  <div class="section_wrap">
+    <div class="menu" onclick="goToPage('http://localhost:9080/travelSearch')">
+      <img class="img" src="img/earth_icon.png">
+      <div class="menu_title">여행지 검색</div>
+    </div>
+    <div class="menu" onclick="goToPage('/travelmaker')">
+      <img class="img" src="img/schedule_icon.png">
+      <div class="menu_title">일정 만들기</div>
+    </div>
+    <div class="menu">
+      <img class="img" src="img/heart_icon.png">
+      <div class="menu_title">커뮤니티 게시판</div>
+      <a href="/board">링크</a>
+    </div>
+  </div>
+</section>
+
+<!-- 푸터 -->
+<footer>
+  <div class="footer_main">
+    <p>트래블메이커</p>
+    <p>주소: 울산광역시 남구 삼산로35번길 19 (신정동) </p>
+    <p>Tel : 052-123-5678</p>
+  </div>
+  <!-- 푸터_카피라이트 -->
+  <div class="footer_copyright">
+    <p>Copyright © TravelMaker. All Rights Reserved.</p>
+  </div>
+
+</footer>
+
+<script>
+  function goToPage(pageUrl) {
+      window.location.href = pageUrl;
+    }
+
+  function logout() {
+    fetch('/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    })
+    .then(response => response.text())
+    .then(data => {
+        if (data === 'OK') {
+            window.location.href = '/';  // 로그아웃 후 리다이렉트할 페이지
+        } else {
+            alert('로그아웃에 실패했습니다.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+</script>
+
+</body>
+
+</html>

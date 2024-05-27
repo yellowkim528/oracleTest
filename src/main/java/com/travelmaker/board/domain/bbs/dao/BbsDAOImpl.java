@@ -82,9 +82,8 @@ public class BbsDAOImpl implements BbsDAO{
     StringBuffer sql = new StringBuffer();
     sql.append("update bbs ");
     sql.append("   set title = :title, ");
-    sql.append("       nickname = :nickname, ");
     sql.append("       bcontent = :bContent, ");
-    sql.append("       udate = default ");
+    sql.append("       udate = default, ");
     sql.append("       plan_id = :planId");
     sql.append(" where bbs_id = :bbsId ");
 

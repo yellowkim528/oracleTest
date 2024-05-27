@@ -30,7 +30,6 @@
             <li><a class="info_edit" href="#">나의 정보수정</a></li>
           </ul>
         </li>
-        <a class="login" href="#">로그인</a>
         <a class="logout" href="#">로그아웃</a>
       </ul>
     </div>
@@ -48,10 +47,13 @@
         <div class="board_wrapper">
           <!-- 게시판 헤더 -->
           <div class="board_header">
-            <div class="search_box">
-              <input type="search" class="search_board" name="" id="" placeholder="찾을 게시물 단어 입력..">
-              <button class="search_button">검색</button>
-            </div>
+            <form action="/board/search" method="get">
+              <div class="search_box">
+                <input type="hidden" name="codeId" value="F0101">
+                <input type="search" class="search_freeboard" name="word" id="word" placeholder="찾을 게시물 단어 입력..">
+                <button type="submit" class="search_button">검색</button>
+              </div>
+            </form>
           </div>
 
 
@@ -112,10 +114,13 @@
           <div class="board_wrapper">
             <!-- 게시판 헤더 -->
             <div class="board_header">
-              <div class="search_box">
-                <input type="search" class="search_board" name="" placeholder="찾을 게시물 단어 입력..">
-                <button class="search_button">검색</button>
-              </div>
+              <form action="/board/search" method="get">
+                <div class="search_box">
+                  <input type="hidden" name="codeId" value="F0103">
+                  <input type="search" class="search_shareboard" name="word" id="word2" placeholder="찾을 게시물 단어 입력..">
+                  <button type="submit" class="search_button">검색</button>
+                </div>
+              </form>
             </div>
             <!-- 게시판 세션 (게시판목록) -->
             <div class="board_section">
@@ -204,11 +209,13 @@
 
     // 게시글 작성 (글쓰기)
     document.addEventListener('DOMContentLoaded', function() {
-      const addButton = document.querySelector('.board_add');
-      addButton.addEventListener('click', function() {
-        location.href = '/board/add';
-      });
+      document.querySelectorAll('.board_add').forEach(function(button){
+        button.addEventListener('click', function() {
+          location.href = '/board/add';
+        });
+      })
     });
+
 
     // (관리자) 게시글 체크 및 삭제버튼 활성화
 

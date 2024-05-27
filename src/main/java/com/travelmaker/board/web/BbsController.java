@@ -2,9 +2,11 @@ package com.travelmaker.board.web;
 
 import com.travelmaker.board.domain.bbs.svc.BbsSVC;
 import com.travelmaker.board.domain.entity.Bbs;
+import com.travelmaker.board.domain.search.svc.SearchSVC;
 import com.travelmaker.board.web.form.bbs.AddForm;
 import com.travelmaker.board.web.form.bbs.EditForm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +21,12 @@ import java.util.Optional;
 public class BbsController {
 
   private BbsSVC bbsSVC;
+  private SearchSVC searchSVC;
 
-  public BbsController(BbsSVC bbsSVC) {
+  // 두 서비스를 모두 주입받는 단일 생성자
+  public BbsController(BbsSVC bbsSVC, SearchSVC searchSVC) {
     this.bbsSVC = bbsSVC;
+    this.searchSVC = searchSVC;
   }
 
   // 작성화면
@@ -33,7 +38,7 @@ public class BbsController {
 
   // 작성요청
   @PostMapping("/add")
-  public String add(
+  public ResponseEntity<String> add(@ModelAttribute
       AddForm addForm,
       Model model,
       RedirectAttributes redirectAttributes
@@ -52,17 +57,31 @@ public class BbsController {
     Long bbsId = bbsSVC.save(addForm.getCodeId(), bbs);
 
 
-    redirectAttributes.addAttribute("bbsId", bbsId);
-    return "redirect:/board/{bbsId}/detail";
+    String redirectUrl = "/board/" + bbsId + "/detail";
+    return ResponseEntity.ok(redirectUrl);
   }
 
   // 목록
-  @GetMapping("")
+  @GetMapping
   public String findFreeAll(Model model) {
     // 자유게시판 목록
     List<Bbs> freeList = bbsSVC.findFreeAll();
     // 공유게시판 목록
     List<Bbs> shareList = bbsSVC.findShareAll();
+    model.addAttribute("freeList", freeList);
+    model.addAttribute("shareList", shareList);
+    return "board/boardList.html";
+  }
+  // 검색
+  @GetMapping("/search")
+  public String searchBoard(
+      @RequestParam("codeId") String codeId,
+      @RequestParam("word") String word,
+      Model model) {
+    // 자유게시판 검색 결과
+    List<Bbs> freeList = searchSVC.searchList(codeId, word);
+    // 공유게시판 검색 결과
+    List<Bbs> shareList = searchSVC.searchList(codeId, word);
     model.addAttribute("freeList", freeList);
     model.addAttribute("shareList", shareList);
     return "board/boardList.html";
@@ -84,9 +103,13 @@ public class BbsController {
   }
 
   // 삭제
-  @DeleteMapping("/{bbsId}/del")
-  public String delete(@PathVariable("bbsId") Long bbsId) {
+  @PostMapping("/{bbsId}/del")
+  public String delete(
+      @PathVariable("bbsId") Long bbsId,
+      RedirectAttributes redirectAttributes) {
     int deleteRowCnt = bbsSVC.deleteById(bbsId);
+
+    redirectAttributes.addAttribute("bbsId", bbsId);
     return "redirect:/board";
   }
 

@@ -30,7 +30,6 @@
           <li><a class="info_edit" href="#">나의 정보수정</a></li>
         </ul>
       </li>
-      <a class="login" href="#">로그인</a>
       <a class="logout" href="#">로그아웃</a>
     </ul>
   </div>
@@ -40,7 +39,7 @@
   <div class="wrapper">
     <div class="conbox">
       <div class="board_wrapper">
-        <form id="frm" action="/board/1/edit" method="post">
+        <form id="frm" th:action="@{/board/{bbsId}/edit(bbsId=${bbs.bbsId})}" method="post">
           <div>
             <select id="boardSelect" class="form-select">
               <option value="default">게시판선택</option>
@@ -52,7 +51,7 @@
             <table class="table table-secondary">
               <thead>
                 <tr>
-                  <td><input id="bbsTitle" name="bbsTitle" type="text" th:value="${bbs.title}"></td>
+                  <td><input id="title" name="title" type="text" th:value="${bbs.title}"></td>
                 </tr>
               </thead>
               <tbody>
@@ -60,15 +59,15 @@
                   <td><button>일정가져오기</button></td>
                 </tr>
                 <tr>
-                  <td><textarea id="content" name="bbsContent" cols="30" rows="10" th:text="${bbs.bContent}"></textarea></td>
+                  <td><textarea id="bContent" name="bContent" cols="30" rows="10" th:text="${bbs.bContent}"></textarea></td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div id="btns">
-            <button class="btn btn-dark" type="reset" value="초기화">초기화</button>
-            <button class="btn btn-dark" type="button" value="목록" id="listBtn">목록</button>
-            <button class="btn btn-dark" type="submit" value="저장" id="saveBtn">저장</button>
+            <button class="btn" type="reset" value="초기화">초기화</button>
+            <button class="btn" type="button" value="목록" id="listBtn">목록</button>
+            <button class="btn" type="submit" value="저장" id="saveBtn">저장</button>
           </div>
         </form>
 
@@ -89,7 +88,12 @@
   </div>
 </footer>
 <script>
-
+  // 게시판 목록 버튼
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('listBtn').addEventListener('click', function () {
+      location.href = `/board`;
+    });
+  });
 </script>
 
 
