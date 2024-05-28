@@ -61,30 +61,46 @@ public class BbsController {
     return ResponseEntity.ok(redirectUrl);
   }
 
-  // 목록
-  @GetMapping
+  // 자유게시판 목록
+  @GetMapping("/free")
   public String findFreeAll(Model model) {
-    // 자유게시판 목록
     List<Bbs> freeList = bbsSVC.findFreeAll();
-    // 공유게시판 목록
-    List<Bbs> shareList = bbsSVC.findShareAll();
     model.addAttribute("freeList", freeList);
-    model.addAttribute("shareList", shareList);
-    return "board/boardList.html";
+    return "board/freeBoardList.html";
   }
-  // 검색
-  @GetMapping("/search")
-  public String searchBoard(
+
+  // 공유게시판 목록
+  @GetMapping("/share")
+  public String findShareAll(Model model) {
+    List<Bbs> shareList = bbsSVC.findShareAll();
+    model.addAttribute("shareList", shareList);
+    return "board/shareBoardList.html";
+  }
+
+  // 자유게시판 검색
+  @GetMapping("/free/search")
+  public String freeSearch (
       @RequestParam("codeId") String codeId,
       @RequestParam("word") String word,
       Model model) {
     // 자유게시판 검색 결과
     List<Bbs> freeList = searchSVC.searchList(codeId, word);
+    model.addAttribute("freeList", freeList);
+    model.addAttribute("codeId", codeId);
+    return "board/freeBoardList";
+  }
+
+  // 공유게시판 검색
+  @GetMapping("/share/search")
+  public String shareSearch(
+      @RequestParam("codeId") String codeId,
+      @RequestParam("word") String word,
+      Model model) {
     // 공유게시판 검색 결과
     List<Bbs> shareList = searchSVC.searchList(codeId, word);
-    model.addAttribute("freeList", freeList);
     model.addAttribute("shareList", shareList);
-    return "board/boardList.html";
+    model.addAttribute("codeId", codeId);
+    return "board/shareBoardList";
   }
 
 
