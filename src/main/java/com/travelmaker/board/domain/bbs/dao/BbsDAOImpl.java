@@ -99,6 +99,7 @@ public class BbsDAOImpl implements BbsDAO{
     checkSql.append(" SELECT COUNT(*) ");
     checkSql.append("   FROM GB  ");
     checkSql.append("  WHERE MANAGEMENT_ID = :managementId ");
+    checkSql.append("    AND BBS_ID = :bbsId ");
 
     SqlParameterSource checkParam = new MapSqlParameterSource()
         .addValue("bbsId", bbsId)
@@ -113,10 +114,11 @@ public class BbsDAOImpl implements BbsDAO{
     } else {
       // 2. GB 테이블에 좋아요 기록 추가
       StringBuffer insertSql = new StringBuffer();
-      insertSql.append("  INSERT INTO GB (GB_ID, GOOD, MANAGEMENT_ID) ");
-      insertSql.append("  VALUES (GB_GB_ID_SEQ.nextval, 1, :managementId)  ");
+      insertSql.append("  INSERT INTO GB (GB_ID, GOOD, MANAGEMENT_ID, BBS_ID) ");
+      insertSql.append("  VALUES (GB_GB_ID_SEQ.nextval, 1, :managementId, :bbsId)  ");
 
       SqlParameterSource insertParam = new MapSqlParameterSource()
+          .addValue("bbsId", bbsId)
           .addValue("managementId", managementId);
       template.update(insertSql.toString(), insertParam);
 
@@ -164,28 +166,15 @@ public class BbsDAOImpl implements BbsDAO{
   // 삭제
   @Override
   public int deleteById(Long bbsId) {
-    StringBuffer fkUnlock = new StringBuffer();
-    fkUnlock.append(" ALTER TABLE RBBS ");
-    fkUnlock.append(" DROP CONSTRAINT RBBSTB_BBS_ID_FK ");
-
-    template.update(fkUnlock.toString(),new HashMap<>());
-
     StringBuffer sql = new StringBuffer();
-    sql.append(" delete from bbs ");
+
+    sql.append("  delete from bbs ");
     sql.append("  where bbs_id = :bbsId ");
+
 
     SqlParameterSource param = new MapSqlParameterSource()
         .addValue("bbsId", bbsId);
     int deleteRowCnt = template.update(sql.toString(), param);
-
-    StringBuffer fkLock = new StringBuffer();
-    fkLock.append("  ALTER TABLE RBBS ");
-    fkLock.append("  ADD CONSTRAINT RBBSTB_BBS_ID_FK ");
-    fkLock.append("  FOREIGN KEY(BBS_ID) ");
-    fkLock.append("  REFERENCES BBS(BBS_ID) ");
-    fkLock.append("  ON DELETE CASCADE ");
-
-    template.update(fkUnlock.toString(),new HashMap<>());
 
     return deleteRowCnt;
   }

@@ -158,7 +158,7 @@
      document.addEventListener('DOMContentLoaded', function () {
     // "clickable-title" 클래스를 가진 모든 요소에 대해 함수를 실행합니다.
       document.getElementById('delBtn').addEventListener('click', function () {
-        if(confirm('정말 이 댓글을 삭제하시겠습니까?')){
+        if(confirm('정말 이 게시글을 삭제하시겠습니까?')){
           fetch(`/board/${bbsId}/del`, {
             method: 'POST', // POST 요청을 명시
           }).then(response => {

@@ -162,7 +162,7 @@ public class BbsController {
     Bbs bbs = foundBbs.orElseThrow();
     model.addAttribute("bbs", bbs);
 
-    return "board/boardDetail.html";
+    return "board/boardDetail";
   }
 
   // 좋아요 요청
@@ -206,7 +206,7 @@ public class BbsController {
     Bbs foundBbs = bbs.orElseThrow();
 
     model.addAttribute("bbs", foundBbs);
-    return "board/boardEdit.html";
+    return "board/boardEdit";
   }
 
   // 수정 처리
