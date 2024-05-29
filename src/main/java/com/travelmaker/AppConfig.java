@@ -10,20 +10,21 @@ public class AppConfig implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    //인증 체크
-    registry.addInterceptor(new LoginCheckInterCeptor())
-        .order(1)
-        .addPathPatterns("/**")
-        .excludePathPatterns(
-            "/",
-            "/login",
-            "/logout",
-            "/members/join",
-            "/css/**",
-            "/img/**",
-            "/js/**",
-            "/test/**",
-            "/api/**"
-        );
+//    //인증 체크
+//    registry.addInterceptor(new LoginCheckInterCeptor())
+//        .order(1)
+//        .addPathPatterns("/**")
+//        .excludePathPatterns(
+//            "/",
+//            "/login",
+//            "/logout",
+//            "/members/join",
+//            "/css/**",
+//            "/img/**",
+//            "/js/**",
+//            "/test/**",
+//            "/api/**",
+//            "/board/**"
+//        );
   }
 }

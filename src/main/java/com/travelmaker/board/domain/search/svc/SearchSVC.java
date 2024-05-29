@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface SearchSVC {
 
-  List<Bbs> searchList(String codeId, String word);
+  List<Bbs> searchList(String codeId, String word, int offset, int pageSize);
+
+  int countSearchResults(String codeId, String word);
 
 }

@@ -77,7 +77,7 @@
         </div>
         <!-- 좋아요 댓글수  표시부분      -->
         <div class="board_wrapper">
-          <h3 id="stats">조회 : 0 좋아요 : 0 댓글 : 0 </h3>
+          <h3 id="stats">조회 : 0 좋아요 : 0 </h3>
           <button id="goodBtn">좋아요</button>
         </div>
         
@@ -93,6 +93,9 @@
         </div>
         <!-- 댓글 표시 부분-->
         <div class="board_wrapper">
+          <span>댓글 </span>
+          <span id="commentCount"></span>
+          <br>
           <div id="comments">
             <!-- 댓글 목록이 여기에 표시됩니다 -->
           </div>
@@ -115,7 +118,7 @@
   </footer>
 
   <script th:inline="javascript">
-    // 로그인세션 managementId
+    // 로그인세션 
     let managementId = [[${session.loginMember.managementId}]]
     let nickname = [[${session.loginMember.nickname}]]
 
@@ -129,10 +132,17 @@
     let bbsId = [[${bbsId}]];
     console.log(bbsId);
 
+    // 통계 정보 업데이트
+    function stats (hit, good){
+      const statsElement = document.getElementById('stats');
+      statsElement.innerHTML = `조회 ${hit} 좋아요 ${good}`
+    };
+    
+
     // 게시판 목록 버튼
     document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('listBtn').addEventListener('click', function () {
-        location.href = `/board`;
+        location.href = `/board/free`;
       });
     });
 
@@ -148,27 +158,25 @@
      document.addEventListener('DOMContentLoaded', function () {
     // "clickable-title" 클래스를 가진 모든 요소에 대해 함수를 실행합니다.
       document.getElementById('delBtn').addEventListener('click', function () {
-        fetch(`/board/${bbsId}/del`, {
-          method: 'POST', // POST 요청을 명시
-        }).then(response => {
-          // 요청이 성공적으로 처리되면 게시판 목록 페이지로 리다이렉트
-          if (response.ok) {
-            console.log('굳')
-            location.href = '/board';
-          }
-        }).catch(error => {
-          // 에러 처리
-          console.error('Error:', error);
-        });
+        if(confirm('정말 이 댓글을 삭제하시겠습니까?')){
+          fetch(`/board/${bbsId}/del`, {
+            method: 'POST', // POST 요청을 명시
+          }).then(response => {
+            // 요청이 성공적으로 처리되면 게시판 목록 페이지로 리다이렉트
+            if (response.ok) {
+              console.log('굳')
+              alert('게시글이 성공적으로 삭제되었습니다.')
+              location.href = '/board/free';
+            }
+          }).catch(error => {
+            // 에러 처리
+            console.error('Error:', error);
+            alert('게시글 삭제 중 오류가 발생했습니다.')
+          });
+        };
       });
+        
     });
-
-    // 댓글 개수
-    const commentCount = document.querySelectorAll('.commentItem').length;
-
-    // 통계 정보 업데이트
-    const statsElement = document.getElementById('stats');
-    statsElement.innerHTML = `조회 ${hit} 좋아요 ${good} 댓글 ${commentCount}`
 
     // 날짜 포맷팅 함수 정의
     function formatCommentDate(cdate) {
@@ -182,11 +190,39 @@
       });
     }
 
+    // 좋아요 버튼 이벤트
+    document.addEventListener('DOMContentLoaded', function() {
+    const goodBtn = document.getElementById('goodBtn');
+
+      goodBtn.addEventListener('click', function() {
+        fetch(`/board/${bbsId}/detail/${managementId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.goodCnt);
+          if (data.goodCnt == 1) {
+            good += 1;        // 좋아요 수 1 증가
+            stats(hit, good); // 업데이트된 좋아요 수로 통계 정보 업데이트
+            alert('좋아요!');
+          } else {
+            alert('이미 좋아요를 누르셨습니다.');
+          }
+        })
+        .catch(error => {
+          console.error('좋아요 처리 중 오류가 발생했습니다.', error);
+        });
+      });
+    });
 
     // 등록
     document.getElementById('addForm').addEventListener('submit', async function (evt) {
 
       evt.preventDefault();
+
       // 댓글 입력 폼
       let rbbsText = document.getElementById('textbox').value;
       console.log(rbbsText);
@@ -239,7 +275,7 @@
         data.forEach(function (comment) {
           const formattedDate = formatCommentDate(comment.cdate);
           commentsHtml += `
-                <div id="comment-${comment.rbbsId}" "class="comment_option">
+                <div id="comment-${comment.rbbsId}" class="comment_option">
                   <ul class="comment_list">
                     <li type="hidden" id="${comment.rbbsId}" class="commentItem">
                       <div class="comment_box">
@@ -266,6 +302,15 @@
           commentsHtml +=  `</div>`
         });
         document.getElementById('comments').innerHTML = commentsHtml;
+
+        // 좋아요 조회수 불러오기
+        stats (hit, good)
+
+        // 댓글 수 업데이트
+        const commentCount = document.querySelectorAll('.comment_option').length;
+        document.getElementById('commentCount').innerText = commentCount;
+        console.log(commentCount);
+      
 
         // 댓글 수정 버튼 클릭 이벤트 리스너 추가
         document.querySelectorAll('.editBtn').forEach(function (button) {
@@ -366,6 +411,7 @@
 
     }
 
+    // 댓글 삭제
     function deleteComment(commentId) {
       console.log(commentId);
       if (confirm('정말 이 댓글을 삭제하시겠습니까?')) {

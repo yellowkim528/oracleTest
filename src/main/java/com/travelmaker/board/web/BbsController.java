@@ -12,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -44,8 +46,6 @@ public class BbsController {
       RedirectAttributes redirectAttributes
   ) {
 
-//    유효성검사자리 (몰?루)
-
     // 글 등록
     Bbs bbs = new Bbs();
     bbs.setManagementId(addForm.getManagementId());
@@ -63,18 +63,42 @@ public class BbsController {
 
   // 자유게시판 목록
   @GetMapping("/free")
-  public String findFreeAll(Model model) {
-    List<Bbs> freeList = bbsSVC.findFreeAll();
+  public String findFreeAll(
+      @RequestParam(defaultValue = "1") int page,
+      Model model) {
+    int pageSize = 10; // 페이지 당 게시글 수
+    List<Bbs> freeList = bbsSVC.findFreeAll(page, pageSize);
+
+    int totalBbsCount = bbsSVC.countFreeAll();
+    int totalPages = (int) Math.ceil((double) totalBbsCount / pageSize);
+
+    log.info("totalBbsCount={}",totalBbsCount);
+    log.info("totalPages={}",totalPages);
+
     model.addAttribute("freeList", freeList);
-    return "board/freeBoardList.html";
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", totalPages);
+
+    return "board/freeBoardList";
   }
 
   // 공유게시판 목록
   @GetMapping("/share")
-  public String findShareAll(Model model) {
-    List<Bbs> shareList = bbsSVC.findShareAll();
+  public String findShareAll(
+      @RequestParam(defaultValue = "1") int page,
+      Model model) {
+
+    int pageSize = 10; // 페이지 당 게시글 수
+    List<Bbs> shareList = bbsSVC.findShareAll(page, pageSize);
+
+    int totalBbsCount = bbsSVC.countFreeAll();
+    int totalPages = (int) Math.ceil((double) totalBbsCount / pageSize);
+
     model.addAttribute("shareList", shareList);
-    return "board/shareBoardList.html";
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", totalPages);
+
+    return "board/shareBoardList";
   }
 
   // 자유게시판 검색
@@ -82,11 +106,22 @@ public class BbsController {
   public String freeSearch (
       @RequestParam("codeId") String codeId,
       @RequestParam("word") String word,
+      @RequestParam(defaultValue = "1") int page,
       Model model) {
+
+    int pageSize = 10; // 페이지 당 게시글 수
+    int offset = (page - 1) * pageSize;
+
     // 자유게시판 검색 결과
-    List<Bbs> freeList = searchSVC.searchList(codeId, word);
+    List<Bbs> freeList = searchSVC.searchList(codeId, word, offset, pageSize);
+    int totalBbsCount = searchSVC.countSearchResults(codeId, word);
+    int totalPages = (int) Math.ceil((double) totalBbsCount / pageSize);
+
+
     model.addAttribute("freeList", freeList);
     model.addAttribute("codeId", codeId);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", totalPages);
     return "board/freeBoardList";
   }
 
@@ -95,11 +130,22 @@ public class BbsController {
   public String shareSearch(
       @RequestParam("codeId") String codeId,
       @RequestParam("word") String word,
+      @RequestParam(defaultValue = "1") int page,
       Model model) {
+
+    int pageSize = 10; // 페이지 당 게시글 수
+    int offset = (page - 1) * pageSize;
+
     // 공유게시판 검색 결과
-    List<Bbs> shareList = searchSVC.searchList(codeId, word);
+    List<Bbs> shareList = searchSVC.searchList(codeId, word, offset, pageSize);
+    int totalBbsCount = searchSVC.countSearchResults(codeId, word);
+    int totalPages = (int) Math.ceil((double) totalBbsCount / pageSize);
+
     model.addAttribute("shareList", shareList);
     model.addAttribute("codeId", codeId);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", totalPages);
+
     return "board/shareBoardList";
   }
 
@@ -110,12 +156,31 @@ public class BbsController {
       @PathVariable Long bbsId,
       Model model
   ) {
-
     Optional<Bbs> foundBbs = bbsSVC.findById(bbsId);
+    int hitCnt = bbsSVC.upHit(bbsId);
+    log.info("hitCnt={}",hitCnt);
     Bbs bbs = foundBbs.orElseThrow();
     model.addAttribute("bbs", bbs);
 
     return "board/boardDetail.html";
+  }
+
+  // 좋아요 요청
+  @PostMapping("{bbsId}/detail/{managementId}")
+  @ResponseBody
+  public Map<String, Object> goodUp(
+      @PathVariable Long bbsId,
+      @PathVariable Long managementId,
+      Model model,
+      RedirectAttributes redirectAttributes
+  ) {
+    int goodCnt = bbsSVC.upGood(bbsId, managementId);
+
+    log.info("goodCnt={}",goodCnt);
+    Map<String, Object> response = new HashMap<>();
+    response.put("goodCnt", goodCnt);
+
+    return response;
   }
 
   // 삭제
@@ -126,7 +191,8 @@ public class BbsController {
     int deleteRowCnt = bbsSVC.deleteById(bbsId);
 
     redirectAttributes.addAttribute("bbsId", bbsId);
-    return "redirect:/board";
+
+    return "redirect:/board/free";
   }
 
   // 수정 화면

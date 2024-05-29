@@ -60,7 +60,7 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th class="ck"><input type="checkbox" id="selectAll2"></th>
+<!--                  <th class="ck"><input type="checkbox" id="selectAll2"></th>-->
                   <th class="tn">글번호</th>
                   <th class="tt">제목</th>
                   <th class="tw">작성자</th>
@@ -72,8 +72,8 @@
               <tbody>
                 <!-- 테이블행 반복 -->
                 <tr class="free_board" th:each="i : ${shareList}" th:data-bbs-id="${i.bbsId}">
-                  <td class="ck"><input type="checkbox" name=""></td>
-                  <td class="tn">123</td>
+<!--                  <td class="ck"><input type="checkbox" name=""></td>-->
+                  <td class="tn" th:text="${i.bbsId}">123</td>
                   <td class="tt clickable-title" th:text="${i.title}">공유게시글제목</td>
                   <td class="tw" th:text="${i.nickname}">작성한놈</td>
                   <td class="td" th:text="${#temporals.format(i.cdate,'yyyy-MM-dd')}">작성일자임</td>
@@ -86,27 +86,35 @@
 
           <!-- 게시판 아래 -->
           <div class="board_footer">
-            <!-- 페이징은 임시 -->
+            <!-- 페이징 -->
             <div class="pagination">
-              <div><<</div>
-              <div><</div>
-              <div>1</div>
-              <div>2</div>
-              <div>3</div>
-              <div>4</div>
-              <div>5</div>
-              <div>&gt;</div>
-              <div>&gt;&gt;</div>
-            </div>
-            <div class="btn_wrap">
-              <button class="board_add">글쓰기</button>
-              <button class="board_del" style="display:none">삭제</button>
+              <div th:if="${currentPage > 1}">
+                <a th:href="@{'?page=' + 1}">처음</a>
+                <a th:href="@{'?page=' + (${currentPage} - 1)}">이전</a>
+              </div>
+
+              <div th:each="page : ${#numbers.sequence(1, totalPages)}">
+                <span th:if="${page == currentPage}" th:text="${page}"></span>
+                <a th:if="${page != currentPage}" th:href="@{'?page=' + ${page}}" th:text="${page}"></a>
+              </div>
+
+              <div th:if="${currentPage < totalPages}">
+                <a th:href="@{'?page=' + (${currentPage} + 1)}">다음</a>
+                <a th:href="@{'?page=' + ${totalPages}}">끝</a>
+              </div>
+              <div class="btn_wrap">
+                <button class="board_add">글쓰기</button>
+                <button class="board_del" style="display:none">삭제</button>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
-    </div> <!-- 자유게시판 끝 -->
+
+    </div>
   </div>
+  <!-- 자유게시판 끝 -->
   <!-- 푸터 -->
   <footer>
     <div class="footer_main">

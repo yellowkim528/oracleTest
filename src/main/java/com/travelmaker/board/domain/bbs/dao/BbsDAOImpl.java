@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,6 +76,65 @@ public class BbsDAOImpl implements BbsDAO{
     }
   }
 
+  // 조회수 증가
+  @Override
+  public int upHit(Long bbsId) {
+    StringBuffer sql = new StringBuffer();
+    sql.append(" update bbs ");
+    sql.append("    set hit = hit + 1 ");
+    sql.append("  where bbs_id = :bbsId ");
+
+    SqlParameterSource param = new MapSqlParameterSource()
+        .addValue("bbsId", bbsId);
+    int hitCnt = template.update(sql.toString(), param);
+
+    return hitCnt;
+  }
+
+  // 좋아요 증가
+  @Override
+  public int upGood(Long bbsId, Long managementId) {
+    // 1. GB 테이블에서 좋아요 누른 적 있는지 확인
+    StringBuffer checkSql = new StringBuffer();
+    checkSql.append(" SELECT COUNT(*) ");
+    checkSql.append("   FROM GB  ");
+    checkSql.append("  WHERE MANAGEMENT_ID = :managementId ");
+
+    SqlParameterSource checkParam = new MapSqlParameterSource()
+        .addValue("bbsId", bbsId)
+        .addValue("managementId", managementId);
+
+    int count = template.queryForObject(checkSql.toString(), checkParam, Integer.class);
+
+    if (count > 0) {
+      // 이미 좋아요를 누른 경우
+      log.info("이미 좋아요를 눌렀습니다.");
+      return 0;
+    } else {
+      // 2. GB 테이블에 좋아요 기록 추가
+      StringBuffer insertSql = new StringBuffer();
+      insertSql.append("  INSERT INTO GB (GB_ID, GOOD, MANAGEMENT_ID) ");
+      insertSql.append("  VALUES (GB_GB_ID_SEQ.nextval, 1, :managementId)  ");
+
+      SqlParameterSource insertParam = new MapSqlParameterSource()
+          .addValue("managementId", managementId);
+      template.update(insertSql.toString(), insertParam);
+
+      // 3. BBS 테이블에 좋아요 증가
+      StringBuffer sql = new StringBuffer();
+      sql.append("UPDATE BBS ");
+      sql.append("   SET GOOD = GOOD + 1 ");
+      sql.append(" WHERE BBS_ID = :bbsId ");
+
+      SqlParameterSource param = new MapSqlParameterSource()
+          .addValue("bbsId", bbsId);
+      int goodCnt = template.update(sql.toString(), param);
+
+      return goodCnt;
+    }
+  }
+
+
   // 수정
   @Override
   public int updateById(Long bbsId, Bbs bbs) {
@@ -104,43 +164,119 @@ public class BbsDAOImpl implements BbsDAO{
   // 삭제
   @Override
   public int deleteById(Long bbsId) {
+    StringBuffer fkUnlock = new StringBuffer();
+    fkUnlock.append(" ALTER TABLE RBBS ");
+    fkUnlock.append(" DROP CONSTRAINT RBBSTB_BBS_ID_FK ");
+
+    template.update(fkUnlock.toString(),new HashMap<>());
+
     StringBuffer sql = new StringBuffer();
     sql.append(" delete from bbs ");
     sql.append("  where bbs_id = :bbsId ");
 
     SqlParameterSource param = new MapSqlParameterSource()
         .addValue("bbsId", bbsId);
-
     int deleteRowCnt = template.update(sql.toString(), param);
+
+    StringBuffer fkLock = new StringBuffer();
+    fkLock.append("  ALTER TABLE RBBS ");
+    fkLock.append("  ADD CONSTRAINT RBBSTB_BBS_ID_FK ");
+    fkLock.append("  FOREIGN KEY(BBS_ID) ");
+    fkLock.append("  REFERENCES BBS(BBS_ID) ");
+    fkLock.append("  ON DELETE CASCADE ");
+
+    template.update(fkUnlock.toString(),new HashMap<>());
 
     return deleteRowCnt;
   }
 
   // 자유게시판 목록
+  // 목록 불러오기
   @Override
-  public List<Bbs> findFreeAll() {
+  public List<Bbs> findFreeAll(int offset, int pageSize) {
     // 쿼리를 보내서 db로부터 게시글을 전부받아 반환하는 코드
     StringBuffer sql = new StringBuffer();
-    sql.append("    select *  ");
-    sql.append("      from bbs ");
-    sql.append("     where code_id = 'F0101' ");
-    sql.append("  order by bbs_id desc ");
+    sql.append("  SELECT * FROM ( ");
+    sql.append("      SELECT ROWNUM AS RNUM, A.* FROM ( "  );
+    sql.append("      SELECT * ");
+    sql.append("        FROM BBS ");
+    sql.append("       WHERE CODE_ID = 'F0101' ");
+    sql.append("    ORDER BY BBS_ID DESC) ");
+    sql.append("    A WHERE ROWNUM <= :endRow ");
+    sql.append("    ) WHERE RNUM > :startRow ");
 
-    List<Bbs> list = template.query(sql.toString(), BeanPropertyRowMapper.newInstance(Bbs.class));
+    log.info("offset={}",offset);
+    log.info("pageSize={}",pageSize);
+
+    int startRow = offset;
+    int endRow = offset + pageSize;
+
+    SqlParameterSource param = new MapSqlParameterSource()
+        .addValue("startRow", startRow)
+        .addValue("endRow", endRow);
+
+    List<Bbs> list = template.query(
+        sql.toString(),
+        param,
+        BeanPropertyRowMapper.newInstance(Bbs.class));
+
     return list;
   }
+  // 페이징
+  @Override
+  public int countFreeAll() {
+    StringBuffer sql = new StringBuffer();
+    sql.append("    select count(*)  ");
+    sql.append("      from bbs       ");
+    sql.append("     where code_id = 'F0101'  ");
+
+    int total = template.queryForObject(sql.toString(), new HashMap<>(), Integer.class);
+
+    return total;
+  }
+  
   
   // 공유게시판 목록
   @Override
-  public List<Bbs> findShareAll() {
+  public List<Bbs> findShareAll(int offset, int pageSize) {
     // 쿼리를 보내서 db로부터 게시글을 전부받아 반환하는 코드
     StringBuffer sql = new StringBuffer();
-    sql.append("    select *  ");
-    sql.append("      from bbs ");
-    sql.append("     where code_id = 'F0103' ");
-    sql.append("  order by bbs_id desc ");
+    sql.append("  SELECT * FROM ( ");
+    sql.append("      SELECT ROWNUM AS RNUM, A.* FROM ( "  );
+    sql.append("      SELECT * ");
+    sql.append("        FROM BBS ");
+    sql.append("       WHERE CODE_ID = 'F0103' ");
+    sql.append("    ORDER BY BBS_ID DESC) ");
+    sql.append("    A WHERE ROWNUM <= :endRow ");
+    sql.append("    ) WHERE RNUM > :startRow ");
 
-    List<Bbs> list = template.query(sql.toString(), BeanPropertyRowMapper.newInstance(Bbs.class));
+    log.info("offset={}",offset);
+    log.info("pageSize={}",pageSize);
+
+    int startRow = offset;
+    int endRow = offset + pageSize;
+
+    SqlParameterSource param = new MapSqlParameterSource()
+        .addValue("startRow", startRow)
+        .addValue("endRow", endRow);
+
+    List<Bbs> list = template.query(
+        sql.toString(),
+        param,
+        BeanPropertyRowMapper.newInstance(Bbs.class));
+
     return list;
+  }
+  // 페이징
+  @Override
+  public int countShareAll() {
+    StringBuffer sql = new StringBuffer();
+    sql.append("    select count(*)  ");
+    sql.append("      from bbs       ");
+    sql.append("     where code_id = 'F0103'  ");
+
+    int total = template.queryForObject(sql.toString(), new HashMap<>(), Integer.class);
+
+    return total;
   }
 }

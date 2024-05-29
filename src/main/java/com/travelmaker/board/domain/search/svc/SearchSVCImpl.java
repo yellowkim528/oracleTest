@@ -16,8 +16,12 @@ public class SearchSVCImpl implements SearchSVC {
   }
 
   @Override
-  public List<Bbs> searchList(String codeId, String word) {
-    return searchDAO.searchList(codeId, word);
+  public List<Bbs> searchList(String codeId, String word, int offset, int pageSize) {
+    return searchDAO.searchList(codeId, word, offset, pageSize);
   }
 
+  @Override
+  public int countSearchResults(String codeId, String word) {
+    return searchDAO.countSearchResults(codeId, word);
+  }
 }

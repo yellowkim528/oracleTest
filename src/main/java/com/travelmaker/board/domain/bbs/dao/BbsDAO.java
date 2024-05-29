@@ -12,6 +12,12 @@ public interface BbsDAO {
   // 조회
   Optional<Bbs> findById(Long bbsId);
 
+  // 조회수 증가
+  int upHit(Long bbsId);
+
+  // 좋아요 증가
+  public int upGood(Long bbsId, Long managementId);
+
   // 수정
   int updateById(Long bbsId, Bbs bbs);
 
@@ -19,8 +25,14 @@ public interface BbsDAO {
   int deleteById(Long bbsId);
 
   // 자유게시판 목록
-  List<Bbs> findFreeAll();
+  List<Bbs> findFreeAll(int page, int pageSize);
+
+  // 자유게시판 페이징
+  int countFreeAll();
 
   // 공유게시판 목록
-  List<Bbs> findShareAll();
+  List<Bbs> findShareAll(int offset, int pageSize);
+
+  // 공유게시판 페이징
+  int countShareAll();
 }
