@@ -113,25 +113,6 @@ input[id="tab02"]:checked~.con2 {
   text-align: center;
 }
 
-.board_footer {
-  display: flex;
-  justify-content: space-between;
-  text-align: center;
-}
-
-.board_del,
-.board_add {
-  border: none;
-  background-color: #5e687a;
-  color: #fff;
-  padding: 10px;
-}
-
-.board_del:hover,
-.board_add:hover {
-  background-color: #5e687a;
-  cursor: pointer;
-}
 
 /* -----테이블 시작-------- */
 
@@ -197,11 +178,31 @@ tr .tn {
 
 /* --- 테이블 종료 --- */
 
+.board_footer {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.board_del,
+.board_add {
+  border: none;
+  background-color: #5e687a;
+  color: #fff;
+  padding: 10px;
+}
+
+.board_del:hover,
+.board_add:hover {
+  background-color: #5e687a;
+  cursor: pointer;
+}
+
 
 /* 페이지네이션 임시 */
 .pagination {
   display: flex;
-  justify-content: flex-start;
+  /* justify-content: flex-start; */
 }
 
 .pagination div {
@@ -222,5 +223,5 @@ tr .tn {
 }
 
 .pagination div:hover {
-  background-color: rgb(71, 128, 234);
+  background-color: rgb(211, 204, 113);
 }

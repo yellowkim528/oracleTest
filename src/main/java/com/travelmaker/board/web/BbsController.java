@@ -67,10 +67,14 @@ public class BbsController {
       @RequestParam(defaultValue = "1") int page,
       Model model) {
     int pageSize = 10; // 페이지 당 게시글 수
+    if (page < 1) page = 1; // 페이지 번호가 1 이하일 경우 1로 설정
     List<Bbs> freeList = bbsSVC.findFreeAll(page, pageSize);
 
     int totalBbsCount = bbsSVC.countFreeAll();
     int totalPages = (int) Math.ceil((double) totalBbsCount / pageSize);
+    int windowSize = 5; // 화면에 보여줄 페이지 번호의 개수
+    int startPage = ((page - 1) / windowSize) * windowSize + 1;
+    int endPage = Math.min(startPage + windowSize - 1, totalPages);
 
     log.info("totalBbsCount={}",totalBbsCount);
     log.info("totalPages={}",totalPages);
@@ -78,6 +82,8 @@ public class BbsController {
     model.addAttribute("freeList", freeList);
     model.addAttribute("currentPage", page);
     model.addAttribute("totalPages", totalPages);
+    model.addAttribute("startPage", startPage);
+    model.addAttribute("endPage", endPage);
 
     return "board/freeBoardList";
   }
@@ -89,14 +95,20 @@ public class BbsController {
       Model model) {
 
     int pageSize = 10; // 페이지 당 게시글 수
+    if (page < 1) page = 1; // 페이지 번호가 1 이하일 경우 1로 설정
     List<Bbs> shareList = bbsSVC.findShareAll(page, pageSize);
 
     int totalBbsCount = bbsSVC.countFreeAll();
     int totalPages = (int) Math.ceil((double) totalBbsCount / pageSize);
+    int windowSize = 5; // 화면에 보여줄 페이지 번호의 개수
+    int startPage = ((page - 1) / windowSize) * windowSize + 1;
+    int endPage = Math.min(startPage + windowSize - 1, totalPages);
 
     model.addAttribute("shareList", shareList);
     model.addAttribute("currentPage", page);
     model.addAttribute("totalPages", totalPages);
+    model.addAttribute("startPage", startPage);
+    model.addAttribute("endPage", endPage);
 
     return "board/shareBoardList";
   }
@@ -110,18 +122,24 @@ public class BbsController {
       Model model) {
 
     int pageSize = 10; // 페이지 당 게시글 수
+    if (page < 1) page = 1; // 페이지 번호가 1 이하일 경우 1로 설정
     int offset = (page - 1) * pageSize;
 
     // 자유게시판 검색 결과
     List<Bbs> freeList = searchSVC.searchList(codeId, word, offset, pageSize);
     int totalBbsCount = searchSVC.countSearchResults(codeId, word);
     int totalPages = (int) Math.ceil((double) totalBbsCount / pageSize);
+    int windowSize = 5; // 화면에 보여줄 페이지 번호의 개수
+    int startPage = ((page - 1) / windowSize) * windowSize + 1;
+    int endPage = Math.min(startPage + windowSize - 1, totalPages);
 
 
     model.addAttribute("freeList", freeList);
     model.addAttribute("codeId", codeId);
     model.addAttribute("currentPage", page);
     model.addAttribute("totalPages", totalPages);
+    model.addAttribute("startPage", startPage);
+    model.addAttribute("endPage", endPage);
     return "board/freeBoardList";
   }
 
@@ -134,17 +152,23 @@ public class BbsController {
       Model model) {
 
     int pageSize = 10; // 페이지 당 게시글 수
+    if (page < 1) page = 1; // 페이지 번호가 1 이하일 경우 1로 설정
     int offset = (page - 1) * pageSize;
 
     // 공유게시판 검색 결과
     List<Bbs> shareList = searchSVC.searchList(codeId, word, offset, pageSize);
     int totalBbsCount = searchSVC.countSearchResults(codeId, word);
     int totalPages = (int) Math.ceil((double) totalBbsCount / pageSize);
+    int windowSize = 5; // 화면에 보여줄 페이지 번호의 개수
+    int startPage = ((page - 1) / windowSize) * windowSize + 1;
+    int endPage = Math.min(startPage + windowSize - 1, totalPages);
 
     model.addAttribute("shareList", shareList);
     model.addAttribute("codeId", codeId);
     model.addAttribute("currentPage", page);
     model.addAttribute("totalPages", totalPages);
+    model.addAttribute("startPage", startPage);
+    model.addAttribute("endPage", endPage);
 
     return "board/shareBoardList";
   }

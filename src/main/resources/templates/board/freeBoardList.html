@@ -86,30 +86,44 @@
           </table>
         </div>
 
-        <!-- 게시판 아래 -->
+        <!-- 게시판 하단 -->
         <div class="board_footer">
-          <!-- 페이징 -->
+          <!-- 더미 div -->
+          <div></div>
+          <!-- 페이지네이션 -->
           <div class="pagination">
-            <div th:if="${currentPage > 1}">
-              <a th:href="@{'?page=' + 1}">처음</a>
-              <a th:href="@{'?page=' + (${currentPage} - 1)}">이전</a>
+            <!-- <<, < 버튼 -->
+            <div th:if="${totalPages > 5}">
+              <div th:if="${currentPage > 5}">
+                <a th:href="@{'?page=' + 1}"><<</a>
+              </div>
+              <div th:if="${currentPage > 5}">
+                <a th:href="@{'?page=' + (${currentPage} - 1)}"><</a>
+              </div>
             </div>
-
-            <div th:each="page : ${#numbers.sequence(1, totalPages)}">
+            <!-- 페이지 번호 -->
+            <div th:each="page : ${#numbers.sequence(startPage, endPage)}">
               <span th:if="${page == currentPage}" th:text="${page}"></span>
               <a th:if="${page != currentPage}" th:href="@{'?page=' + ${page}}" th:text="${page}"></a>
             </div>
-
-            <div th:if="${currentPage < totalPages}">
-              <a th:href="@{'?page=' + (${currentPage} + 1)}">다음</a>
-              <a th:href="@{'?page=' + ${totalPages}}">끝</a>
-            </div>
-            <div class="btn_wrap">
-              <button class="board_add">글쓰기</button>
-              <button class="board_del" style="display:none">삭제</button>
+            <!-- >>, > 버튼 -->
+            <div th:if="${totalPages > 5}">
+              <div th:if="${currentPage < totalPages}">
+                <a th:href="@{'?page=' + (${currentPage} + 1)}">></a>
+              </div>
+              <div th:if="${currentPage < totalPages}">
+                <a th:href="@{'?page=' + ${totalPages}}">>> </a>
+              </div>
             </div>
           </div>
+          <!-- 글쓰기 버튼 -->
+          <div class="btn_wrap">
+            <button class="board_add">글쓰기</button>
+            <button class="board_del" style="display:none">삭제</button>
+          </div>
         </div>
+
+
 
       </div>
     </div>
